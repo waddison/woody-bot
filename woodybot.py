@@ -45,5 +45,25 @@ async def lol_summoner(summonerName: str=None):
 
     await client.say(f"League of Legends summoner {summoner['name']} is level {summoner['summonerLevel']}")
 
+@client.command()
+async def lol_match(summonerName: str=None):
+    summoner = riotservice.get_summoner(summonerName)
+
+    match = riotservice.is_in_match(summoner['id'])
+
+    participants = match['participants']
+    for participant in participants:
+        if participant['summonerName'] == summonerName:
+            print(participant['championId'])
+            champion = riotservice.get_champion(participant['championId'])
+            break;
+    ##champion = riotservice.get_champion(match['championId'])
+
+    if match:
+        print(f"summoner: {summoner}")
+        print(f"match: {match}")
+        print(f"champion: {champion}")
+        await client.say(f"{summoner['name']} is in game and is playing {champion['name']}")
+
 
 client.run(TOKEN)
